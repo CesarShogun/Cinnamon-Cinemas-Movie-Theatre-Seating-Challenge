@@ -12,7 +12,6 @@
             var seat = new Seat();
             seat = list[0];
             list.RemoveAt(0);
-            list.Add(new Seat());
             return seat;
         }
     }

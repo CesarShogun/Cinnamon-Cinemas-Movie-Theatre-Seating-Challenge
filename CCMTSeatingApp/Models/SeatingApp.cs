@@ -19,19 +19,30 @@
             }
         }
 
-        public List<Seat> ReserveNSeats(int numberSeats)
+        public List<Seat> ReserveSeats(int numberSeats)
         {
             List<Seat> reservedSeats = new();
 
             for (var i = 0; i < numberSeats; i++)
             {
-                reservedSeats.Add(seats.Pop());
+                Seat? seat = reserveNextSeat();
+                if (seat == null)
+                {
+                    if (reservedSeats.Count() > 0)
+                        throw new NoAvailableSeatsException($"Not enough available seats. {reservedSeats.Count()} seats where reserved.", reservedSeats);
+                    else
+                        throw new NoAvailableSeatsException("No seats are available. No seats where reserved.");
+                }
+                else
+                {
+                    reservedSeats.Add((Seat)seat);
+                }   
             }
 
             return reservedSeats;
         }
 
-        public Seat? ReserveNextSeat()
+        private Seat? reserveNextSeat()
         {
             if (seats.Count() > 0)
                 return seats.Pop();

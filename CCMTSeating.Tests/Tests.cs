@@ -23,18 +23,25 @@ namespace CCMTSeating.Tests
         }
 
         [Test]
-        public void PoP_Must_Return_And_Remove_Elements_Correctly()
+        public void Must_Reserve_And_Pop_Seats_Correctly()
         {
-            SeatingApp.ReserveNextSeat().ToString().Should().Be("A1");
-            SeatingApp.ReserveNextSeat().ToString().Should().Be("A2");
-            SeatingApp.ReserveNextSeat().ToString().Should().Be("A3");
+            List<Seat> s = new() { new Seat(1, 1), new Seat(1, 2), new Seat(1, 3) };
+            SeatingApp.ReserveSeats(3).Should().BeEquivalentTo(s);
         }
 
         [Test]
-        public void Test1()
+        public void Must_Handle_No_Available_Seats()
         {
-            List<Seat> s = new() { new Seat(1, 1), new Seat(1, 2), new Seat(1, 3) };
-            SeatingApp.ReserveNSeats(3).Should().BeEquivalentTo(s);
+            SeatingApp.ReserveSeats(13);
+            var ex = Assert.Throws<NoAvailableSeatsException>(() => SeatingApp.ReserveSeats(3));
+            Assert.That(ex.Message, Is.EqualTo("Not enough available seats. 2 seats where reserved."));
+
+
+            SeatingApp = new();
+            SeatingApp.ReserveSeats(15);
+            ex = Assert.Throws<NoAvailableSeatsException>(() => SeatingApp.ReserveSeats(2));
+            Assert.That(ex.Message, Is.EqualTo("No seats are available. No seats where reserved."));
         }
+
     }
 }
