@@ -12,18 +12,20 @@ namespace CCMTSeatingApp.Models
             Console.ForegroundColor = ConsoleColor.Green;
 
             printLogo();
-            string? line = "";
-            while (line != "exit")
+            ConsoleKeyInfo keyPressed;
+            bool exit = false;
+            while (!exit)
             {
-                Console.WriteLine($"\nThere are {seatingApp.AvailableSeats} available seats left.");
-                Console.Write("Please, enter the number seats you want to reserve or type \"exit\" to leave the application: ");
-                line = Console.ReadLine();
-                lineListener(line);
+                printMenu();
+                keyPressed = Console.ReadKey();
+                exit = menuListener(keyPressed);
             }
+            Console.Clear();
         }
 
         private static void printLogo()
         {
+            Console.Clear();
             Console.WriteLine(
                 "      ___ _                                             ___ _                                \r\n" +
                 "     / __(_)_ __  _ __   __ _ _ __ ___   ___  _ __     / __(_)_ __   ___ _ __ ___   __ _ ___ \r\n" +
@@ -37,15 +39,58 @@ namespace CCMTSeatingApp.Models
             Console.WriteLine("------------------------------------------------------------------------------------------------");
         }
 
-        private static void lineListener(string line)
+        private static void printMenu()
         {
-            numberOfSeatsInput(line);
+            Console.WriteLine($"\nPlease press an option:");
+            Console.Write("1) Show Seats in Theatre\n" +
+                "2) Reserve Seats\n" +
+                "3) Exit\n\n>");
+        }
+
+        private static bool menuListener(ConsoleKeyInfo key)
+        {
+            switch (key.KeyChar)
+            {
+                case '1':
+                    printLogo();
+                    printSeats();
+                    return false;
+                case '2':
+                    printLogo();
+                    reserveSeatMenu();
+                    printLogo();
+                    return false;
+                case '3':
+                    return true;
+                default:
+                    Console.Clear();
+                    printLogo();
+                    return false;
+            }
+        }
+
+        private static void reserveSeatMenu()
+        {
+            string? line = "";
+            while (line != "n")
+            {
+                printReserveSeatMenu();
+                line = Console.ReadLine();
+                numberOfSeatsInput(line);
+            }
+
+            Console.Clear();
+        }
+
+        private static void printReserveSeatMenu()
+        {
+            Console.WriteLine($"\nThere are {seatingApp.AvailableSeats} seats available.\nEnter the desired number of seats to be reserved or enter \"n\" to return to the menu:");
+            Console.Write(">");
         }
 
         private static void numberOfSeatsInput(string line)
         {
             List<Seat> reservedSeats = new();
-
 
             if (Regex.IsMatch(line, @"^[0-9]+$"))
             {
@@ -75,10 +120,48 @@ namespace CCMTSeatingApp.Models
 
         private static void printReservedSeats(List<Seat> seats)
         {
+            if (seats.Count() == 0)
+                return;
+
             Console.WriteLine("The following seats where reserved:");
             Console.Write("\t");
             seats.ForEach(s => Console.Write($"{s} "));
             Console.Write("\n");
+        }
+
+        private static void printSeats()
+        {
+            Console.WriteLine("\nSEAT DISPOSITION GRAPHIC ------------------------------------------");
+            Console.WriteLine("▒ = Available seat.");
+            Console.WriteLine("█ = Occupied seat.\n");
+            Console.Write("   ");
+
+            int seatOrder = 0;
+
+            for (var i = 0; i < SeatingApp.N_SEATS; i++)
+            {
+                Console.Write($"{i + 1} ");
+            }
+
+            Console.WriteLine("\n");
+
+            for (var i = 0; i < SeatingApp.N_ROWS; i++)
+            {
+                Console.Write($"{(char)(65 + i)}  ");
+                for (var j = 0; j < SeatingApp.N_SEATS; j++)
+                {
+                    if (seatingApp.Seats.Count() > 0 && seatingApp.Seats[seatOrder].Equals(new Seat(i + 1, j + 1)))
+                    {
+                        Console.Write("▒ ");
+                        seatOrder++;
+                    }   
+                    else
+                    {
+                        Console.Write("█ ");
+                    }   
+                }
+                Console.WriteLine("\n");
+            }
         }
     }
 }

@@ -5,18 +5,18 @@
         public const int N_ROWS = 3;
         public const int N_SEATS = 5;
 
-        public int AvailableSeats { get { return seats.Count(); } }
+        public int AvailableSeats { get { return Seats.Count(); } }
 
-        private List<Seat> seats;
+        public List<Seat> Seats { get; private set; }
 
         public SeatingApp()
         {
-            seats = new();
+            Seats = new();
             for (var i = 0; i < N_ROWS; i++)
             {
                 for (var j = 0; j < N_SEATS; j++)
                 {
-                    seats.Add(new Seat(i + 1, j + 1));
+                    Seats.Add(new Seat(i + 1, j + 1));
                 }
             }
         }
@@ -34,9 +34,9 @@
                 if (seat == null)
                 {
                     if (reservedSeats.Count() > 0)
-                        throw new NoAvailableSeatsException($"Not enough available seats. {reservedSeats.Count()} seats where reserved.", reservedSeats);
+                        throw new NoAvailableSeatsException($"Not enough available Seats. {reservedSeats.Count()} Seats where reserved.", reservedSeats);
                     else
-                        throw new NoAvailableSeatsException("No seats are available. No seats where reserved.");
+                        throw new NoAvailableSeatsException("No Seats are available. No Seats where reserved.");
                 }
                 else
                 {
@@ -49,15 +49,15 @@
 
         private Seat? reserveNextSeat()
         {
-            if (seats.Count() > 0)
-                return seats.Pop();
+            if (Seats.Count() > 0)
+                return Seats.Pop();
             else
                 return null;
         }
 
         public string GetSeatName(int seatPosition)
         {
-            return seats[seatPosition - 1].ToString();
+            return Seats[seatPosition - 1].ToString();
         }
     }
 }
