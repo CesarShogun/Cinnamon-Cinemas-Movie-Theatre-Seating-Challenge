@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32819.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CCMTSeatingApp", "CCMTSeatingApp\CCMTSeatingApp.csproj", "{592D2EF9-4202-459D-9E53-35D75B652476}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CCMTSeating.Tests", "CCMTSeating.Tests\CCMTSeating.Tests.csproj", "{87037F2F-E01E-42C3-9813-EDB7BAB2B925}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{592D2EF9-4202-459D-9E53-35D75B652476}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{592D2EF9-4202-459D-9E53-35D75B652476}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{592D2EF9-4202-459D-9E53-35D75B652476}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{592D2EF9-4202-459D-9E53-35D75B652476}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87037F2F-E01E-42C3-9813-EDB7BAB2B925}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87037F2F-E01E-42C3-9813-EDB7BAB2B925}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87037F2F-E01E-42C3-9813-EDB7BAB2B925}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87037F2F-E01E-42C3-9813-EDB7BAB2B925}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A8515978-4A4D-476B-B043-B60BD5592D7B}
+	EndGlobalSection
+EndGlobal
