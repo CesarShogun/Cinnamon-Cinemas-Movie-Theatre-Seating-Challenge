@@ -23,6 +23,16 @@ namespace CCMTSeating.Tests
         }
 
         [Test]
+        public void Must_Test_Correct_Number_Seats_Entered_To_Reserve()
+        {
+            var ex = Assert.Throws<ReservedSeatOutOfRangeException>(() => SeatingApp.ReserveSeats(0));
+            Assert.That(ex.Message, Is.EqualTo($"A number greater than 0 and no greater than {SeatingApp.N_ROWS * SeatingApp.N_SEATS} must be entered."));
+
+            ex = Assert.Throws<ReservedSeatOutOfRangeException>(() => SeatingApp.ReserveSeats(SeatingApp.N_ROWS * SeatingApp.N_SEATS + 1));
+            Assert.That(ex.Message, Is.EqualTo($"A number greater than 0 and no greater than {SeatingApp.N_ROWS * SeatingApp.N_SEATS} must be entered."));
+        }
+
+        [Test]
         public void Must_Reserve_And_Pop_Seats_Correctly()
         {
             List<Seat> s = new() { new Seat(1, 1), new Seat(1, 2), new Seat(1, 3) };
@@ -38,7 +48,9 @@ namespace CCMTSeating.Tests
 
 
             SeatingApp = new();
-            SeatingApp.ReserveSeats(15);
+            SeatingApp.ReserveSeats(5);
+            SeatingApp.ReserveSeats(7);
+            SeatingApp.ReserveSeats(3);
             ex = Assert.Throws<NoAvailableSeatsException>(() => SeatingApp.ReserveSeats(2));
             Assert.That(ex.Message, Is.EqualTo("No seats are available. No seats where reserved."));
         }

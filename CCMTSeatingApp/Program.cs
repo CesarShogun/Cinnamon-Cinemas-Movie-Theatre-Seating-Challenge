@@ -1,3 +1,3 @@
 ﻿using CCMTSeatingApp.Models;
 
-SeatingApp s = new();
+CCMTSConsole.InitConsole();

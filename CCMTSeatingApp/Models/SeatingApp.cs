@@ -5,6 +5,8 @@
         public const int N_ROWS = 3;
         public const int N_SEATS = 5;
 
+        public int AvailableSeats { get { return seats.Count(); } }
+
         private List<Seat> seats;
 
         public SeatingApp()
@@ -21,6 +23,9 @@
 
         public List<Seat> ReserveSeats(int numberSeats)
         {
+            if (numberSeats > 15 || numberSeats < 1)
+                throw new ReservedSeatOutOfRangeException($"A number greater than 0 and no greater than {N_ROWS * N_SEATS} must be entered.");
+
             List<Seat> reservedSeats = new();
 
             for (var i = 0; i < numberSeats; i++)
