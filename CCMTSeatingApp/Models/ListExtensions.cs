@@ -2,16 +2,16 @@
 {
     public static class ListExtensions
     {
-        public static Seat Pop(this List<Seat> list)
+        public static Seat Pop(this List<Seat> list, int index = 0)
         {
             if (list == null)
                 throw new ArgumentNullException("The list must not be null.");
-            if (list.Count() == 0)
-                throw new ArgumentOutOfRangeException("Index was out of range. There are no elements in the list.");
+            if (index >= list.Count())
+                throw new ArgumentOutOfRangeException("Index was out of range.");
 
             var seat = new Seat();
-            seat = list[0];
-            list.RemoveAt(0);
+            seat = list[index];
+            list.RemoveAt(index);
             return seat;
         }
     }

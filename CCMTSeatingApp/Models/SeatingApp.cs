@@ -34,9 +34,9 @@
                 if (seat == null)
                 {
                     if (reservedSeats.Count() > 0)
-                        throw new NoAvailableSeatsException($"Not enough available Seats. {reservedSeats.Count()} Seats where reserved.", reservedSeats);
+                        throw new NoAvailableSeatsException($"Not enough available seats. {reservedSeats.Count()} seats where reserved.", reservedSeats);
                     else
-                        throw new NoAvailableSeatsException("No Seats are available. No Seats where reserved.");
+                        throw new NoAvailableSeatsException("No seats are available. No seats where reserved.");
                 }
                 else
                 {
