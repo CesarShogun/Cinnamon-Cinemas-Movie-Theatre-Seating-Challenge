@@ -96,7 +96,7 @@ namespace CCMTSeatingApp.Models
             {
                 try
                 {
-                    reservedSeats = seatingApp.ReserveSeats(Int32.Parse(line));
+                    //reservedSeats = seatingApp.ReserveSeats(Int32.Parse(line));
                 }
                 catch (Exception e)
                 {

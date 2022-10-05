@@ -23,37 +23,63 @@ namespace CCMTSeating.Tests
         }
 
         [Test]
-        public void Must_Test_Correct_Number_Seats_Entered_To_Reserve()
+        public void Asking_For_Repeated_Seats_Must_Reflect_Event()
         {
-            var ex = Assert.Throws<ReservedSeatOutOfRangeException>(() => SeatingApp.ReserveSeats(0));
-            Assert.That(ex.Message, Is.EqualTo($"A number greater than 0 and no greater than {SeatingApp.N_ROWS * SeatingApp.N_SEATS} must be entered."));
+            var seats = new List<Seat>(){
+                new Seat(1, 2),
+                new Seat(1, 3),
+                new Seat(1, 3),
+            };
 
-            ex = Assert.Throws<ReservedSeatOutOfRangeException>(() => SeatingApp.ReserveSeats(SeatingApp.N_ROWS * SeatingApp.N_SEATS + 1));
-            Assert.That(ex.Message, Is.EqualTo($"A number greater than 0 and no greater than {SeatingApp.N_ROWS * SeatingApp.N_SEATS} must be entered."));
+            ReservationData result = SeatingApp.ReserveSeats(seats);
+            Assert.That(result.Event, Is.EqualTo(ReservationEvent.REPEATED));
         }
 
         [Test]
-        public void Must_Reserve_And_Pop_Seats_Correctly()
+        public void Trying_To_Reserve_Reserved_Seats_Must_Reflect_Event()
         {
-            List<Seat> s = new() { new Seat(1, 1), new Seat(1, 2), new Seat(1, 3) };
-            SeatingApp.ReserveSeats(3).Should().BeEquivalentTo(s);
+            var seats = new List<Seat>(){
+                new Seat(1, 4),
+                new Seat(1, 3),
+                new Seat(1, 2),
+            };
+
+            SeatingApp.ReserveSeats(seats);
+            ReservationData result = SeatingApp.ReserveSeats(seats);
+            Assert.That(result.Event, Is.EqualTo(ReservationEvent.NONE_RESERVED));
         }
 
         [Test]
-        public void Must_Handle_No_Available_Seats()
+        public void Reserve_Available_Seats_Must_Reflect_Event()
         {
-            SeatingApp.ReserveSeats(13);
-            var ex = Assert.Throws<NoAvailableSeatsException>(() => SeatingApp.ReserveSeats(3));
-            Assert.That(ex.Message, Is.EqualTo("Not enough available seats. 2 seats where reserved."));
+            var seats = new List<Seat>(){
+                new Seat(1, 2),
+                new Seat(1, 3),
+                new Seat(1, 4),
+            };
 
-
-            SeatingApp = new();
-            SeatingApp.ReserveSeats(5);
-            SeatingApp.ReserveSeats(7);
-            SeatingApp.ReserveSeats(3);
-            ex = Assert.Throws<NoAvailableSeatsException>(() => SeatingApp.ReserveSeats(2));
-            Assert.That(ex.Message, Is.EqualTo("No seats are available. No seats where reserved."));
+            ReservationData result = SeatingApp.ReserveSeats(seats);
+            Assert.That(result.Event, Is.EqualTo(ReservationEvent.ALL_RESERVED));
         }
 
+        [Test]
+        public void Trying_To_Reserve_Some_Reserved_Seats_Must_Reflect_Event()
+        {
+            var seatsA = new List<Seat>(){
+                new Seat(1, 2),
+                new Seat(1, 3),
+                new Seat(1, 4),
+            };
+
+            var seatsB = new List<Seat>(){
+                new Seat(1, 4),
+                new Seat(1, 5),
+                new Seat(1, 6),
+            };
+
+            SeatingApp.ReserveSeats(seatsA);
+            ReservationData result = SeatingApp.ReserveSeats(seatsB);
+            Assert.That(result.Event, Is.EqualTo(ReservationEvent.SOME_RESERVED));
+        }
     }
 }

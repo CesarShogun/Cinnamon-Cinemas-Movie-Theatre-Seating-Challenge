@@ -1,4 +1,7 @@
-﻿namespace CCMTSeatingApp.Models
+﻿using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
+
+namespace CCMTSeatingApp.Models
 {
     public class SeatingApp
     {
@@ -21,43 +24,49 @@
             }
         }
 
-        public List<Seat> ReserveSeats(int numberSeats)
+        public ReservationData ReserveSeats(List<Seat> seats)
         {
-            if (numberSeats > 15 || numberSeats < 1)
-                throw new ReservedSeatOutOfRangeException($"A number greater than 0 and no greater than {N_ROWS * N_SEATS} must be entered.");
+            var repeatedSeats = seats.GroupBy(x => x)
+                .Where(g => g.Count() > 1)
+                .ToList();
 
-            List<Seat> reservedSeats = new();
+            if (repeatedSeats.Count() > 0)
+                return new ReservationData(null, null, ReservationEvent.REPEATED);
 
-            for (var i = 0; i < numberSeats; i++)
+            List<Seat> seatsToReserve = new List<Seat>();
+            List<Seat> nonAvailableSeats = new List<Seat>();
+
+            foreach (var r in seats)
             {
-                Seat? seat = reserveNextSeat();
-                if (seat == null)
-                {
-                    if (reservedSeats.Count() > 0)
-                        throw new NoAvailableSeatsException($"Not enough available seats. {reservedSeats.Count()} seats where reserved.", reservedSeats);
-                    else
-                        throw new NoAvailableSeatsException("No seats are available. No seats where reserved.");
-                }
+                Seat? s = reserveSeat(r);
+                if (s == null)
+                    nonAvailableSeats.Add(r);
                 else
+                    seatsToReserve.Add((Seat)s);
+            }
+            
+            if (nonAvailableSeats.Count() == 0)
+                return new ReservationData(seatsToReserve, null, ReservationEvent.ALL_RESERVED);
+            else if (nonAvailableSeats.Count() > 0 && seatsToReserve.Count() > 0)
+                return new ReservationData(seatsToReserve, nonAvailableSeats, ReservationEvent.SOME_RESERVED);
+            else
+                return new ReservationData(null, nonAvailableSeats, ReservationEvent.NONE_RESERVED);
+        }
+
+        private Seat? reserveSeat(Seat reserve)
+        {
+            Seat? seat = null;
+            
+            for (var i = 0; i < Seats.Count(); i++)
+            {
+                if (Seats[i].Equals(reserve))
                 {
-                    reservedSeats.Add((Seat)seat);
-                }   
+                    seat = Seats.Pop(i);
+                    break;
+                }
             }
 
-            return reservedSeats;
-        }
-
-        private Seat? reserveNextSeat()
-        {
-            if (Seats.Count() > 0)
-                return Seats.Pop();
-            else
-                return null;
-        }
-
-        private void branchTest()
-        {
-            
+            return seat;
         }
 
         public string GetSeatName(int seatPosition)
